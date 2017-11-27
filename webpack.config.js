@@ -4,7 +4,7 @@ var path = require('path');
 // 导入：html-webpack-plugin
 var htmlwp = require('html-webpack-plugin');
 
-// 导入webpack这个包
+// 导入webpack这个包,导入后就可以调用里面的方法了
 var webpack = require('webpack');
 
 module.exports = {
@@ -80,7 +80,7 @@ module.exports = {
             // 通过script标签加载到index.html的底部
             template: 'index1.html'
         }),
-        // 将jqeruy对象映射为$和jQuery
+        // 将jqeruy对象映射为$和jQuery，因为这里用到了webpack.什么，所以就要在上面引入webpack这个包
         new webpack.ProvidePlugin({
             $:  "jquery",
             jQuery:  "jquery"

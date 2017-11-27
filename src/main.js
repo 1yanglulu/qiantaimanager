@@ -6,7 +6,6 @@ import Vue from 'vue';
 // 2.0 导入app.vue组件对象
 import App from './App.vue';   //当前目录下面查找app.vue这个组件
 
-
 // 3.0 导入vue-router这个路由模块进行整个系统的路由控制
 // 3.0.1 导入vue-router这个包
 import VueRouter from 'vue-router';
@@ -14,10 +13,12 @@ import VueRouter from 'vue-router';
 // 3.0.0 将VueRouter对象通过Vue.use()使用一下
 Vue.use(VueRouter);
 
+
 // 3.0.2 导入组件对象
 import layout from './components/layout.vue';
 import goodslist from './components/goods/goodslist.vue';
-
+//引入商品组件
+import  goodsinfo from './components/goods/goodsinfo.vue';
 
 // 3.0.2 实例化对象并且定义路由规则
 var router = new VueRouter({
@@ -29,7 +30,9 @@ var router = new VueRouter({
         {name:'layout',path:'/site',component:layout,
         children:[
             // 商品列表
-           {name:'goodslist',path:'goodslist',component:goodslist}
+            //需要传入id的时候。这里一定要带上id，不然获取不到请求
+           {name:'goodslist',path:'goodslist',component:goodslist},
+           {name:'goodsinfo',path:'goodsinfo/:id',component:goodsinfo}
         ]
     }
     ]
@@ -59,16 +62,22 @@ axios.defaults.withCredentials = true;
 // 5.0.2 将axios对象绑定到Vue的原型属性 $ajax上，将来在任何组件中均可以通过this.$ajax中的get(),post() 就可以发出ajax请求了
 Vue.prototype.$ajax = axios;
 
-
-// 6.0 定义一个全局过滤器用来格式化日期
-Vue.filter('datefmt',(input)=>{
-    var date = new Date(input);
-    var y = date.getFullYear();
-    var m = date.getMonth() +1 ;
-    var d = date.getDate();
-    return y + '-' + m + '-' + d;
-});
-
+//设置一个全局过滤器来格式化日期和时间
+Vue.filter('datafmt',(input,dateStr)=>{
+     var date=new Date(input);//默认input
+     var y=date.getFullYear();
+     var m=date.getMonth()+1;
+     var d=date.getDate();
+     var h=date.getHours();
+     var mm=date.getMinutes();
+     var s=date.getSeconds();
+     if(dateStr=='YY-MM-DD HH:mm:ss'){
+         return y+'-'+m+'-'+d+' '+h+":"+mm+":"+s;
+     }else{
+        return  y + '-' + m + '-' + d;
+     }
+    
+})
 // 7.0 实例化vue对象
 new Vue({
     el:'#app',
