@@ -13,12 +13,13 @@ import VueRouter from 'vue-router';
 // 3.0.0 将VueRouter对象通过Vue.use()使用一下
 Vue.use(VueRouter);
 
-
 // 3.0.2 导入组件对象
 import layout from './components/layout.vue';
 import goodslist from './components/goods/goodslist.vue';
 //引入商品组件
 import  goodsinfo from './components/goods/goodsinfo.vue';
+//引入购物车页面
+import car from './components/goods/car.vue';
 
 // 3.0.2 实例化对象并且定义路由规则
 var router = new VueRouter({
@@ -32,7 +33,8 @@ var router = new VueRouter({
             // 商品列表
             //需要传入id的时候。这里一定要带上id，不然获取不到请求
            {name:'goodslist',path:'goodslist',component:goodslist},
-           {name:'goodsinfo',path:'goodsinfo/:id',component:goodsinfo}
+           {name:'goodsinfo',path:'goodsinfo/:id',component:goodsinfo},
+           {name:'car',path:'car',component:car}
         ]
     }
     ]
@@ -46,10 +48,15 @@ import '../statics/elementuiCss/index.css';
 
 // 导入自己编写的全局样式
 import '../statics/site/css/style.css'
+// 引入iview样式
+import '../node_modules/iview/dist/styles/iview.css';
 
 // 绑定到vue中
 Vue.use(elementUI);
 
+//按需引入
+import {Affix} from 'iview';
+Vue.component('Affix', Affix);
 // 5.0 导入axios
 import axios from 'axios';
 

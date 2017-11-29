@@ -14,7 +14,9 @@
                         <a href="/register.html">注册</a>
                         <strong>|</strong>
                         <a href="/content/contact.html"><i class="iconfont icon-phone"></i>联系我们</a>
-                               <a id='layoutbuycar' href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{buyTotalCount}}</span>)</a>
+                        <router-link to='/site/car' id='layoutbuycar'>
+                              <i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{buyTotalCount}}</span>)
+                            </router-link>
                     </div>
                 </div>
             </div>
@@ -116,6 +118,8 @@ import {vm,KEY} from '../kits/bus.js';
             console.log(countStr);
             if(countStr !="NaN"){
                 this.buyTotalCount=parseInt(countStr);
+            }else{
+                this.buyTotalCount=0; 
             }
            //利用vm中的$on方法完成事件的监听
            vm.$on(KEY,(buycount)=>{

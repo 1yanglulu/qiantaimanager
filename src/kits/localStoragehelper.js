@@ -42,3 +42,20 @@ export function setItem(gobj){
 
 
 // 4.0 删除localStorage数据
+export function remoteItem(id){
+     //从localStorage中获取购买商品的对象
+     var obj=getItem(); 
+     //删除对象中id对应的数据即可
+     delete obj[id];
+     //再讲obj重新存回本地
+     localStorage.setItem(KEY,JSON.stringify(obj));
+}
+
+//设置一个修改localStorage中内存的方法
+export function setItemReplace(gobj){
+        //从localStorage中获取商品对象
+        var obj=getItem();
+        obj[gobj.gid]=gobj.count;
+        //将obj存储回localStorage
+        localStorage.setItem(KEY,JSON.stringify(obj));
+}

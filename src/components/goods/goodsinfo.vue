@@ -101,9 +101,13 @@
                             </div>
                             <!--/商品信息-->
                         </div>
+                           
+                                <span class="demo-affix"></span>
+                            </Affix>
 
                         <div id="goodsTabs" class="goods-tab bg-wrap">
                             <!--选项卡-->
+                            <Affix>
                             <div id="tabHead" class="tab-head" style="position: static; top: 517px; width: 925px;">
                                 <ul>
                                     <li @click='istabShow=true'>
@@ -114,6 +118,7 @@
                                     </li>
                                 </ul>
                             </div>
+                            </Affix> 
                             <!--/选项卡-->
 
                             <!--选项内容-->
