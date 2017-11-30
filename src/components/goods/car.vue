@@ -109,8 +109,8 @@
                     <!--购物车底部-->
                     <div class="cart-foot clearfix">
                         <div class="right-box">
-                            <button class="button" onclick="javascript:location.href='/index.html';">继续购物</button>
-                            <button class="submit" onclick="formSubmit(this, '/', '/shopping.html');">立即结算</button>
+                            <button class="button">继续购物</button>
+                            <button class="submit" @click=shopping>立即结算</button>
                         </div>
                     </div>
                     <!--购物车底部-->
@@ -231,6 +231,25 @@
                  })
                  this.goodslist[index].buycount=gobj.count;
 
+            },
+            //跳转到订单页面
+            shopping(){
+                 //1.0获取当前car.vue中选择的商品id
+                 var goodsids=[];
+                 //首先查找this.values中的true所在的索引
+                 this.values.forEach((item,index)=>{
+                      if(item==true){
+                          goodsids.push(this.goodslist[index].id);
+                      }
+                 })
+                 //2.0判断用户是否有至少选择一个商品
+                 if(goodsids.length<=0){
+                      this.$message.error('请至少选择一个需要购买的商品');
+                      //并阻断下面代码的执行
+                      return;
+                 }
+                 //3.0跳转到shopping.vue组件，同时将商品id传入
+                 this.$router.push({name:'shopping',params:{ids:goodsids.join(',')}})
             }
         },
         mounted() {

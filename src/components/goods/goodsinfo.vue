@@ -231,7 +231,7 @@
                 lbcOffSet:{},
                 goodsid: this.$route.params.id,
                 isshow:false,// 隐藏图片div
-                currentBuyCount: 1,
+                currentBuyCount:1,
                 pageIndex: 1,
                 pageSize: 2,
                 totalcount: 0,

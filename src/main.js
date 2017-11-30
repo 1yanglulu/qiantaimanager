@@ -20,6 +20,12 @@ import goodslist from './components/goods/goodslist.vue';
 import  goodsinfo from './components/goods/goodsinfo.vue';
 //引入购物车页面
 import car from './components/goods/car.vue';
+//引入下单页面组件
+import shopping from './components/goods/shopping.vue';
+//支付页面组件
+import pay from './components/goods/pay.vue';
+//登录页面
+import login from './components/account/login.vue';
 
 // 3.0.2 实例化对象并且定义路由规则
 var router = new VueRouter({
@@ -30,11 +36,15 @@ var router = new VueRouter({
         // 布局
         {name:'layout',path:'/site',component:layout,
         children:[
+            // 登录页面
+            { name: 'login', path: 'login', component: login, meta: { nosave: 'true' } },
             // 商品列表
             //需要传入id的时候。这里一定要带上id，不然获取不到请求
            {name:'goodslist',path:'goodslist',component:goodslist},
            {name:'goodsinfo',path:'goodsinfo/:id',component:goodsinfo},
-           {name:'car',path:'car',component:car}
+           {name:'car',path:'car',component:car},
+           {name:'shopping',path:'shopping/:ids',component:shopping,meta: { checklogin: true }},
+           { name: 'pay', path: 'pay/:orderid', component: pay, meta: { checklogin: true }}  
         ]
     }
     ]
@@ -69,6 +79,34 @@ axios.defaults.withCredentials = true;
 // 5.0.2 将axios对象绑定到Vue的原型属性 $ajax上，将来在任何组件中均可以通过this.$ajax中的get(),post() 就可以发出ajax请求了
 Vue.prototype.$ajax = axios;
 
+//6.0全局守卫
+// 职责1：在localStorage中记录用户访问的最后的那个页面（存储一个路由对象),排除登录页面
+//职责2：进行登录检查
+router.beforeEach((to,from,next)=>{
+    //1.0在localStorage中记录用户访问的最后那个页面(存储一个路由对象)，排除登录页面
+    if(to.meta.nosave !="true"){
+      //保存得失当前路由对象中的path
+      //保存得失当前路由对象中的path
+      console.log(to);
+      localStorage.setItem('currentPath',to.path);
+    }
+    //2.0进行登录检查
+    if(to.meta.checklogin){
+         //发出ajax请求 /site/account/islogin
+        axios.get('/site/account/islogin').then(res=>{
+             if(res.data.code=='logined'){
+                 //表示已经登录了，则可以成功进入到目标页面
+                 next();
+             }else{
+                  //表示未登录，则跳转到登录页面//使用编程式导航的额方法
+                  router.push({name:'login'})
+                  
+             }
+        })
+    }else{
+        next();
+    }
+})
 //设置一个全局过滤器来格式化日期和时间
 Vue.filter('datafmt',(input,dateStr)=>{
      var date=new Date(input);//默认input

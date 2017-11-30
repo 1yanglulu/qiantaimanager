@@ -10,10 +10,11 @@
                         <a target="_blank" href="#"></a>
                     </div>
                     <div id="menu" class="right-box">
-                        <a href="/login.html">登录</a>
-                        <a href="/register.html">注册</a>
+                        <router-link v-if="!islogin" to="/site/login">登录</router-link>
+                        <a v-if="!islogin" href="/register.html">注册</a>
                         <strong>|</strong>
-                        <a href="/content/contact.html"><i class="iconfont icon-phone"></i>联系我们</a>
+                        <a v-if="islogin" href="/register.html">会员中心</a>
+                        <a v-if="islogin" @click="logout" href="javascript:void(0)">退出</a>
                         <router-link to='/site/car' id='layoutbuycar'>
                               <i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{buyTotalCount}}</span>)
                             </router-link>
@@ -88,11 +89,34 @@ import {vm,KEY} from '../kits/bus.js';
         data() {
             return {
                  // 用户购买的商品总数
-                 buyTotalCount:0
+                 buyTotalCount:0,
+                 islogin: false
             }
         },
         methods: {
+            checkLogin() {
+                var res = localStorage.getItem('logined');
+                if (res == "true") {
+                    // 已经登录了
+                    this.islogin = true;
+                } else {
+                    // 已经注销了
+                    this.islogin = false;
+                }
+            },
+             // 注销
+             logout(){
+                this.$ajax.get('/site/account/logout').then(res=>{
+                    if(res.data.status == 0){
+                        // 注销成功，应该将localStroage中的logined的值变成false,同时要将当前layou.vue中的this.isloing的值设置成false
+                        this.islogin = false;
+                        localStorage.setItem('logined','false');
 
+                        // 跳转到商品列表
+                        this.$router.push({name:'goodslist'});
+                    }
+                });
+            },
         },
         /* jquery的实现应该要能找到dom对象 */
         mounted() {
@@ -129,7 +153,15 @@ import {vm,KEY} from '../kits/bus.js';
             //在这里将总数存储起来（选择localStorag）
                localStorage.setItem('buyTotalCount',this.buyTotalCount);
 
-           })
+           });
+             // 4.0.1 去 localStorage.getItem('logined');拿到只有以后赋值给this.islogin
+             this.checkLogin();
+
+            // 4.0 .2 利用vm的$on注册登录状态的改变
+            vm.$on('changelogin', (val) => {
+                // 获取localStroage中的是否登录的状态 ,key="logined"
+                this.checkLogin();
+            });
 
 
         }
